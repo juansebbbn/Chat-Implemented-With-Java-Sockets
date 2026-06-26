@@ -1,73 +1,158 @@
-Socket Chat - Messaging Application
+# Socket Chat - Messaging Application
 
+A Java socket-based messaging application that enables multiple clients to connect simultaneously to a central server. The server acts as a message broker, dynamically managing connected clients and routing private messages using unique client IDs.
 
-Description:
+---
 
-This application allows multiple clients to establish concurrent connections to a central server. The server acts as a message broker, dynamically managing active clients and routing private messages between them using unique client identifiers (IDs).
+## Features
 
+* **Multi-Client Concurrency**
 
-Project Structure
+  * Supports multiple simultaneous client connections using multi-threading.
 
-Server.java: The central coordinator. It listens for incoming connection requests, maintains an active registry of client sessions, and handles packet routing.
+* **Private Message Routing**
 
-Cliente.java: The client-side application. It establishes a socket connection to the server, manages local UI/console interactions, and handles sending and receiving messages.
+  * Send messages directly to specific users through unique client identifiers.
 
+* **Non-Blocking Client I/O**
 
-Features:
+  * Dedicated listener threads receive incoming messages while keeping the console responsive for user input.
 
-Multi-Client Concurrency: Supports multiple simultaneous client connections using multi-threading.
+* **Reliable Communication**
 
-Targeted Message Routing: Send messages directly to specific users utilizing their unique client IDs.
+  * Built on the TCP protocol to ensure ordered and reliable message delivery.
 
-Non-Blocking I/O: Separate dedicated threads handle message listening on the client side, ensuring the UI/console input remains responsive.
+* **In-Memory Message History**
 
-TCP Reliability: Built on top of the TCP protocol to guarantee ordered, lossless delivery of chat messages.
+  * Temporary message storage using Java `HashMap` collections on the client side.
 
-In-Memory History: Temporary message buffering utilizing local data structures (HashMap) on the client side.
+---
 
+## Project Structure
 
-How to Run:
+```text
+Socket-Chat/
 
-Follow these steps to compile and run the application locally.
+├── Server.java      # Central server responsible for client management and message routing
+├── Cliente.java     # Client application for connecting and exchanging messages
+└── README.md
+```
 
-1. Compilation
+### Server.java
 
-Compile both the Server and Client source files using the Java compiler:
+The central coordinator of the application.
 
+**Responsibilities:**
+
+* Accept incoming client connections
+* Maintain a registry of connected clients
+* Route private messages between clients
+* Manage active client sessions
+
+---
+
+### Cliente.java
+
+The client-side application.
+
+**Responsibilities:**
+
+* Establish a socket connection with the server
+* Handle console interaction
+* Send and receive messages
+* Maintain a local message history
+
+---
+
+## How to Run
+
+### Prerequisites
+
+* Java Development Kit (JDK) 8 or higher
+* An available TCP socket on **port 8081** (default configuration)
+
+---
+
+### 1. Compile the Project
+
+```bash
 javac Server.java Cliente.java
+```
 
+---
 
+### 2. Start the Server
 
-2. Start the Server
+Launch the server first:
 
-Launch the server coordinator first. By default, it will bind to port 8081:
-
+```bash
 java Server
+```
 
-System Note: Ensure port 8081 is free and not blocked by local firewalls.
+> **Note:** Ensure port **8081** is available and not blocked by another application or firewall.
 
+---
 
+### 3. Launch Clients
 
-3. Launch Clients
+Open a new terminal window for each client instance:
 
-Open a new, separate terminal window for each client instance you want to run:
-
+```bash
 java Cliente
+```
 
+Each client will connect to the server and can begin exchanging private messages.
 
+---
 
-Requirements:
+## Technical Details
 
-Java Development Kit (JDK): Version 8 or higher.
+### Multi-Threading
 
-Network: An available TCP socket on port 8081 (default local host execution).
+Each connected client runs a dedicated background listener thread that continuously waits for incoming messages without interrupting user input.
 
+### Connection Management
 
+The server maintains a thread-safe registry of active clients, allowing concurrent logins, logouts, and message routing without race conditions.
 
-Implementation Details:
+### Communication Protocol
 
-Client Threading: Each client spawns a background listener thread immediately after connecting. This prevents incoming network data reads from blocking user input.
+* **Protocol:** TCP
+* **Architecture:** Client–Server
+* **Communication:** Private messaging between connected clients
 
-Connection Management: The server maps active connections inside a thread-safe registry to prevent resource conflicts or race conditions during rapid client logins/logouts.
+### Data Structures
 
+* `HashMap` for temporary client-side message storage
+* Thread-safe client registry on the server
 
+---
+
+## Requirements
+
+| Requirement | Version       |
+| ----------- | ------------- |
+| Java        | JDK 8+        |
+| Network     | TCP Port 8081 |
+
+---
+
+## Future Improvements
+
+* Group chat support
+* Broadcast messaging
+* Graphical user interface (JavaFX or Swing)
+* Persistent message history
+* User authentication
+* Encrypted communication (SSL/TLS)
+* File sharing support
+
+---
+
+## Author
+
+**Juan**
+
+## Version
+
+**1.0.0**
